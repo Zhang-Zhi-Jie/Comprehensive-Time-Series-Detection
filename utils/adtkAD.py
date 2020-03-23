@@ -27,7 +27,7 @@ class AatkAd():
         rng = pd.date_range('3/21/2020', periods=data.shape[0], freq='S')
         label = pd.DataFrame(data = label, index = rng, columns=['label'])
         label = pd.Series(data = label['label'].values, index=label.index)
-        dataFrame = pd.DataFrame(data = data, index = rng, columns = ['0', '1'])
+        dataFrame = pd.DataFrame(data = data, index = rng)
         data = validate_series(dataFrame)
         return data, label
     
@@ -81,3 +81,4 @@ class AatkAd():
         pca_ad = PcaAD(k=k)
         anomalies = pca_ad.fit_detect(self.data)
         self.anomalies = anomalies
+

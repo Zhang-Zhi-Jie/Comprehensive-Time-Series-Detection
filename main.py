@@ -1,14 +1,16 @@
-from utils.adtkAD import AatkAd
 from data.load_and_preprocess_data import DataSets
-
-data_type = "ecg"
-filename = "chfdb_chf13_45590.pkl"
+from utils.adtkAD import AatkAd
+from utils.pyodAD import PyodAd
+from utils.adPlot import anomaly_plot, tsne_plot
+data_type = "gesture"
+filename = "ann_gun_CentroidA.pkl"
 
 ds = DataSets(data_type = data_type, filename = filename)
 data, label = ds.preprocess()
 
 adtkAd = AatkAd(data = data, label = label)
-# print(adtkAd.label)
-adtkAd.pcaAD(1)
-adtkAd.adtk_plot(anomaly_true = adtkAd.label, anomaly_pred=adtkAd.anomalies)
-
+adtkAd.isolationForestAD(0.02)
+anomaly_plot(adtkAd.data, adtkAd.label, adtkAd.anomalies)
+# pyodAd = PyodAd(data = data, label = label)
+# pyodAd.aeAD(hidden_neurons=[2,2,2,2], epochs=200)
+# pyodAd.pyodPlot()

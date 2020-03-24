@@ -15,6 +15,7 @@ from sklearn.ensemble import IsolationForest
 from adtk.detector import RegressionAD
 from sklearn.linear_model import LinearRegression
 from adtk.detector import PcaAD
+from utils.evaluation import evaluate_for_all_series
 
 
 class AatkAd():
@@ -61,24 +62,31 @@ class AatkAd():
         min_cluster_detector = MinClusterDetector(KMeans(n_clusters=n_clusters))
         anomalies = min_cluster_detector.fit_detect(self.data)
         self.anomalies = anomalies
+        self.evaluate()
     
     def localOutlierFactorAD(self, c):
         outlier_detector = OutlierDetector(LocalOutlierFactor(contamination=c))
         anomalies = outlier_detector.fit_detect(self.data)
         self.anomalies = anomalies
+        self.evaluate()
     
     def isolationForestAD(self, c):
         outlier_detector = OutlierDetector(IsolationForest(contamination=c))
         anomalies = outlier_detector.fit_detect(self.data)
         self.anomalies = anomalies
+        self.evaluate()
 
     def regressionAD(self, target, c):
         regression_ad = RegressionAD(regressor=LinearRegression(), target=target, c=c)
         anomalies = regression_ad.fit_detect(self.data)
         self.anomalies = anomalies
+        self.evaluate()
 
     def pcaAD(self, k):
         pca_ad = PcaAD(k=k)
         anomalies = pca_ad.fit_detect(self.data)
         self.anomalies = anomalies
+        self.evaluate()
 
+    def evaluate(self):
+        evaluate_for_all_series(self.label, self.anomalies)
